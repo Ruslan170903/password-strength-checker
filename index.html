@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Parol kuchini real vaqtda baholang, aqlli tavsiyalar oling va xavfsiz parol yarating. Hammasi brauzerda — parol hech qayerga yuborilmaydi." />
+  <meta name="theme-color" content="#09090b" />
+  <title>ParolMetr — Parol Kuchi Tekshirgich</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    /* Mavzuni bo'yashdan oldin o'rnatamiz — "flash" bo'lmasligi uchun */
+    (function () {
+      try {
+        var t = localStorage.getItem("parolmetr-theme");
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#password">Parol maydoniga o'tish</a>
+
+  <!-- ===== Ikona sprite (bir marta aniqlanadi) ===== -->
+  <svg width="0" height="0" class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.73 5.08a10.74 10.74 0 0 1 11.2 6.57 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-1.44 2.49"/><path d="M14.08 14.16a3 3 0 0 1-4.24-4.24"/><path d="M17.48 17.5a10.75 10.75 0 0 1-15.42-5.15 1 1 0 0 1 0-.7 10.75 10.75 0 0 1 4.45-5.14"/><path d="m2 2 20 20"/></symbol>
+      <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+      <symbol id="i-hash" viewBox="0 0 24 24"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></symbol>
+      <symbol id="i-zap" viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+      <symbol id="i-key" viewBox="0 0 24 24"><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/></symbol>
+      <symbol id="i-landmark" viewBox="0 0 24 24"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+      <symbol id="i-message" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+      <symbol id="i-briefcase" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
+      <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></symbol>
+      <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.86a10 10 0 0 1 14 0"/><path d="M8.5 16.43a5 5 0 0 1 7 0"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ===== Top bar ===== -->
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="#top" aria-label="ParolMetr bosh sahifa">
+        <svg class="brand-logo" viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#a5b4fc" /><stop offset="1" stop-color="#6366f1" />
+            </linearGradient>
+          </defs>
+          <path fill="url(#logoGrad)" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+          <path d="m8.5 12 2.5 2.5 4.5-4.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="brand-name">Parol<span>Metr</span></span>
+      </a>
+      <button type="button" id="themeToggle" class="theme-toggle" aria-label="Mavzuni almashtirish" title="Yorug'/qorong'u">
+        <svg class="ic"><use href="#i-moon" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== Hero ===== -->
+  <header class="hero" id="top">
+    <div class="container">
+      <span class="eyebrow"><svg class="ic"><use href="#i-shield" /></svg> Xavfsizlik vositasi</span>
+      <h1>Parolingiz qanchalik <span class="grad">xavfsiz</span>?</h1>
+      <p class="tagline">Real vaqtda kuchni baholang, aqlli tavsiyalar oling va buzib bo'lmaydigan parol yarating.</p>
+      <p class="privacy-badge"><svg class="ic"><use href="#i-shield" /></svg> Parolingiz hech qayerga yuborilmaydi — hammasi brauzeringizda</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 1. TEKSHIRISH -->
+    <section class="card" aria-labelledby="check-title">
+      <div class="card-head">
+        <span class="num">01</span>
+        <h2 id="check-title">Parolni tekshirish</h2>
+      </div>
+
+      <div class="input-row">
+        <div class="input-wrap">
+          <input type="password" id="password" placeholder="Parolni kiriting…"
+            autocomplete="new-password" autocapitalize="off" autocorrect="off"
+            spellcheck="false" aria-describedby="strengthLabel" />
+          <button type="button" id="toggleVisibility" class="icon-btn" aria-label="Parolni ko'rsatish yoki yashirish" title="Ko'rsatish / yashirish">
+            <svg class="ic"><use href="#i-eye" /></svg>
+          </button>
+        </div>
+        <button type="button" id="generateBtn" class="btn btn-primary">
+          <svg class="ic"><use href="#i-sparkles" /></svg> Generatsiya
+        </button>
+      </div>
+
+      <div class="meter" id="meter" role="progressbar" aria-label="Parol kuchi" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="strength-summary">
+        <span id="strengthLabel" class="strength-label">Parol kiriting</span>
+        <div class="metrics">
+          <span class="metric" title="Entropiya — parolning tasodifiylik o'lchovi (bit)"><svg class="ic"><use href="#i-zap" /></svg> <strong id="entropyValue">—</strong></span>
+          <span class="metric" title="Oddiy GPU bilan (~10 mlrd urinish/sek) taxminiy buzish vaqti"><svg class="ic"><use href="#i-clock" /></svg> <strong id="crackTime">—</strong></span>
+        </div>
+      </div>
+
+      <ul class="criteria" id="criteriaList" aria-label="Parol mezonlari">
+        <li class="criterion" id="crit-length"><span class="mark"><svg class="ic"><use href="#i-check" /></svg></span><span class="text">Kamida 12 belgi</span></li>
+        <li class="criterion" id="crit-lower"><span class="mark"><svg class="ic"><use href="#i-check" /></svg></span><span class="text">Kichik harf (a–z)</span></li>
+        <li class="criterion" id="crit-upper"><span class="mark"><svg class="ic"><use href="#i-check" /></svg></span><span class="text">Katta harf (A–Z)</span></li>
+        <li class="criterion" id="crit-number"><span class="mark"><svg class="ic"><use href="#i-check" /></svg></span><span class="text">Raqam (0–9)</span></li>
+        <li class="criterion" id="crit-symbol"><span class="mark"><svg class="ic"><use href="#i-check" /></svg></span><span class="text">Maxsus belgi (!@#$…)</span></li>
+        <li class="criterion" id="crit-nocommon"><span class="mark"><svg class="ic"><use href="#i-check" /></svg></span><span class="text">Keng tarqalgan parol emas</span></li>
+        <li class="criterion" id="crit-nopattern"><span class="mark"><svg class="ic"><use href="#i-check" /></svg></span><span class="text">Ketma-ketlik/takror yo'q</span></li>
+      </ul>
+    </section>
+
+    <!-- 2. TAVSIYALAR -->
+    <section class="card" aria-labelledby="tips-title">
+      <div class="card-head">
+        <span class="num">02</span>
+        <h2 id="tips-title">Tavsiyalar</h2>
+      </div>
+      <ul class="suggestions" id="suggestions">
+        <li>Parol kiriting — bu yerda shaxsiy tavsiyalar chiqadi.</li>
+      </ul>
+      <div class="callout callout-brand">
+        <svg class="ic callout-ic"><use href="#i-key" /></svg>
+        <div>
+          <strong>Eng oson usul — passphrase (parol-ibora)</strong>
+          <p>4–5 ta tasodifiy, bir-biriga bog'lanmagan so'zni qo'shing. Masalan: <code>olma-daftar-7-quyosh-Tog'</code>. Uzun, lekin eslab qolish oson va buzish juda qiyin.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. QAYERDA QANDAY PAROL -->
+    <section class="card" aria-labelledby="where-title">
+      <div class="card-head">
+        <span class="num">03</span>
+        <h2 id="where-title">Qayerda qanday parol</h2>
+      </div>
+      <p class="muted">Oltin qoida: <strong>har bir xizmat uchun alohida, unikal parol</strong>. Bittasi buzilsa, qolganlari xavfsiz qoladi.</p>
+      <div class="where-grid">
+        <div class="where-item critical">
+          <span class="where-ic"><svg class="ic"><use href="#i-landmark" /></svg></span>
+          <h3>Bank / to'lov</h3>
+          <p>Eng kuchli, unikal parol + albatta 2FA. Hech qachon takrorlamang.</p>
+        </div>
+        <div class="where-item critical">
+          <span class="where-ic"><svg class="ic"><use href="#i-mail" /></svg></span>
+          <h3>Asosiy email</h3>
+          <p>Eng muhim akkaunt — barcha parol tiklash shunga bog'liq. Juda kuchli + 2FA.</p>
+        </div>
+        <div class="where-item high">
+          <span class="where-ic"><svg class="ic"><use href="#i-message" /></svg></span>
+          <h3>Ijtimoiy tarmoqlar</h3>
+          <p>Kuchli, unikal parol + 2FA. Obro' va shaxsiy ma'lumotni himoya qiladi.</p>
+        </div>
+        <div class="where-item high">
+          <span class="where-ic"><svg class="ic"><use href="#i-briefcase" /></svg></span>
+          <h3>Ish / korporativ</h3>
+          <p>Tashkilot talablariga rioya qiling, parol menejeridan foydalaning.</p>
+        </div>
+        <div class="where-item normal">
+          <span class="where-ic"><svg class="ic"><use href="#i-cart" /></svg></span>
+          <h3>Oddiy saytlar</h3>
+          <p>Ahamiyatsiz ko'rinsa ham baribir unikal parol — menejer generatsiya qilgani ma'qul.</p>
+        </div>
+        <div class="where-item normal">
+          <span class="where-ic"><svg class="ic"><use href="#i-wifi" /></svg></span>
+          <h3>Umumiy qurilma</h3>
+          <p>Umumiy kompyuterda muhim akkauntga kirmang; kirsangiz — chiqishni unutmang.</p>
+        </div>
+      </div>
+      <div class="callout callout-brand">
+        <svg class="ic callout-ic"><use href="#i-key" /></svg>
+        <div>
+          <strong>Parol menejeridan foydalaning</strong>
+          <p>Bitwarden, KeePassXC (bepul) yoki 1Password barcha unikal parollarni saqlaydi va generatsiya qiladi. Siz faqat bitta kuchli "master" parolni eslab qolasiz. Imkoni bo'lsa hamma joyda <strong>2FA</strong> yoqing.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. HASHLASH -->
+    <section class="card" aria-labelledby="hash-title">
+      <div class="card-head">
+        <span class="num">04</span>
+        <h2 id="hash-title">Hashlash (saqlash uchun)</h2>
+      </div>
+      <p class="muted">Yuqoridagi parolni hashlab ko'ring — bu parolni "qaytarib bo'lmaydigan" ko'rinishga aylantirish. Ikki usulni solishtiring:</p>
+
+      <div class="hash-actions">
+        <button type="button" id="hashSha" class="btn btn-ghost"><svg class="ic"><use href="#i-hash" /></svg> SHA-256 (tez)</button>
+        <button type="button" id="hashPbkdf2" class="btn btn-ghost"><svg class="ic"><use href="#i-hash" /></svg> PBKDF2 (parol uchun)</button>
+      </div>
+
+      <div class="hash-result" id="shaResult" hidden>
+        <div class="hash-head">
+          <span class="hash-name">SHA-256</span>
+          <span class="badge badge-warn"><svg class="ic"><use href="#i-alert" /></svg> Parol saqlash uchun EMAS</span>
+          <button type="button" class="copy-btn" data-copy="shaValue" aria-label="Nusxa olish"><svg class="ic"><use href="#i-copy" /></svg> Nusxa</button>
+        </div>
+        <code id="shaValue" class="hash-value"></code>
+        <p class="hash-note">Juda tez hisoblanadi — shuning uchun hujumchi sekundiga milliardlab urinadi. Fayl yaxlitligini tekshirish uchun yaxshi, parol uchun <strong>yomon</strong>.</p>
+      </div>
+
+      <div class="hash-result" id="pbkdf2Result" hidden>
+        <div class="hash-head">
+          <span class="hash-name">PBKDF2-SHA256</span>
+          <span class="badge badge-ok"><svg class="ic"><use href="#i-check" /></svg> Parolga mos (sekin + salt)</span>
+          <button type="button" class="copy-btn" data-copy="pbkdf2Value" aria-label="Nusxa olish"><svg class="ic"><use href="#i-copy" /></svg> Nusxa</button>
+        </div>
+        <div class="hash-field"><span class="field-label">Salt (tasodifiy):</span> <code id="pbkdf2Salt" class="hash-value small"></code></div>
+        <div class="hash-field"><span class="field-label">Hash (210 000 iteratsiya):</span> <code id="pbkdf2Value" class="hash-value"></code></div>
+        <p class="hash-note">Ataylab sekin va har safar boshqa "salt" bilan. Shuning uchun massaviy buzish va "rainbow table" ishlamaydi.</p>
+      </div>
+
+      <div class="callout callout-warn">
+        <svg class="ic callout-ic"><use href="#i-alert" /></svg>
+        <div>
+          <strong>Muhim</strong>
+          <p>Haqiqiy ilovalarda hashlash <strong>serverda</strong> bajariladi va odatda <strong>bcrypt</strong>, <strong>argon2</strong> yoki <strong>scrypt</strong> ishlatiladi. Parolni brauzerda hashlab serverga yuborsangiz, hashning o'zi "parol"ga aylanadi. Bu bo'lim — faqat <strong>o'rganish uchun demo</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="foot-privacy"><svg class="ic"><use href="#i-shield" /></svg> Kodi ochiq. Parolingiz hech qachon serverga yuborilmaydi.</p>
+      <p class="muted">Ma'lumot uchun yaratilgan. Haqiqiy xavfsizlik uchun parol menejeri va 2FA ishlating.</p>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
