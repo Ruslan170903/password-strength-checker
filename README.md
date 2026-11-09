@@ -2,6 +2,8 @@
 
 Foydalanuvchi kiritgan parolning **kuchliligini real vaqtda** baholaydigan, **tavsiyalar** beradigan va **hashlashni** ko'rsatadigan veb-ilova. Hammasi **brauzerda** ishlaydi — parol hech qachon serverga yuborilmaydi.
 
+**🔗 Jonli demo:** https://ruslan170903.github.io/password-strength-checker/
+
 > **Maxfiylik:** Parolingiz **hech qachon serverga yuborilmaydi** — barcha tahlil va hashlash sahifaning o'zida (brauzerda) bajariladi. Yagona tashqi so'rov — chiroyli shrift (Google Fonts); u parolga aloqasi yo'q va shriftsiz ham tizim shrifti bilan ishlayveradi. `localStorage` da faqat tanlagan mavzuingiz (yorug'/qorong'u) saqlanadi.
 
 ---
